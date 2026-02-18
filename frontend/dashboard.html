@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>PhishGuard - Dashboard</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<div class="dashboard">
+
+    <div class="header">
+        <h2>Stored Passwords</h2>
+        <button class="add-btn">+ Add Password</button>
+    </div>
+
+    <div class="card">
+        <div>
+            <strong>google.com</strong><br>
+            Username: example@gmail.com
+        </div>
+        <button>View</button>
+    </div>
+
+    <div class="card">
+        <div>
+            <strong>bankofamerica.com</strong><br>
+            Username: user123
+        </div>
+        <button>View</button>
+    </div>
+
+</div>
+
+<!-- Add Password Modal (Mockup) -->
+<div class="modal">
+    <div class="modal-content">
+        <h3>Add New Credential</h3>
+        <input type="text" placeholder="Website URL">
+        <input type="text" placeholder="Username">
+        <input type="password" placeholder="Password">
+        <button>Save</button>
+    </div>
+</div>
+
+<!-- Phishing Warning Modal (Mockup) -->
+<div class="modal">
+    <div class="modal-content">
+        <h3 class="warning">⚠ Phishing Detected!</h3>
+        <p>This website is not secure or does not match stored domain.</p>
+        <p>Password access has been blocked.</p>
+        <button>Go Back</button>
+    </div>
+</div>
+
+<script src="js/script.js"></script>
+</body>
+</html>
