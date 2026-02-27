@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>PhishGuard - Login</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="container">
+    <h1>🔐 PhishGuard</h1>
+
+    <!-- LOGIN SECTION -->
+    <div class="form-section">
+        <h2>Login</h2>
+        <form action="login" method="post">
+            <input type="text" name="username" placeholder="Username" required>
+            <input type="password" name="password" placeholder="Master Password" required>
+            <button type="submit">Login</button>
+        </form>
+    </div>
+
+    <!-- REGISTRATION SECTION -->
+    <div class="form-section register">
+        <h2>Create Account</h2>
+        <form action="register" method="post">
+            <input type="text" name="username" placeholder="New Username" required>
+            <input type="password" name="password" placeholder="New Master Password" required>
+            <button type="submit" class="secondary-btn">Register</button>
+        </form>
+    </div>
+</div>
+
+<!-- ERROR POPUP SCRIPT -->
+<script>
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("error") === "1") {
+        alert("❌ Invalid username or password. Please try again.");
+    }
+</script>
+
+</body>
+</html>
