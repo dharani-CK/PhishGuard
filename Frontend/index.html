@@ -1,0 +1,71 @@
+<!-- ========================= index.html ========================= -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PhishGuard</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="container">
+<h1>🔐 PhishGuard</h1>
+
+<!-- LOGIN -->
+<div id="loginPage" class="card">
+  <h2>Login</h2>
+  <input id="loginUser" placeholder="Username">
+  <input id="loginPass" type="password" placeholder="Master Password">
+  <button onclick="login()">Login</button>
+  <button class="secondary" onclick="showRegister()">Create Account</button>
+</div>
+
+<!-- REGISTER -->
+<div id="registerPage" class="card hidden">
+  <h2>Create Account</h2>
+  <input id="regUser" placeholder="Username">
+  <input id="regPass" type="password" placeholder="Master Password">
+  <button onclick="register()">Register</button>
+  <button class="secondary" onclick="showLogin()">Back to Login</button>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashboard" class="hidden">
+
+<div class="card">
+  <h2>Add Credential</h2>
+  <input id="url" placeholder="Website URL (https://...)">
+  <input id="siteUser" placeholder="Username">
+  <input id="sitePass" type="password" placeholder="Password">
+  <button onclick="addCredential()">Save</button>
+</div>
+
+<div class="card">
+  <h2>Search Credentials</h2>
+  <input id="search" placeholder="Search website" onkeyup="renderCredentials()">
+</div>
+
+<div class="card">
+  <h2>Stored Credentials</h2>
+  <div id="credList"></div>
+</div>
+
+<div class="card">
+  <h2>Report Phishing</h2>
+  <input id="phishUrl" placeholder="Suspicious URL">
+  <button onclick="reportPhishing()">Report</button>
+</div>
+
+<button class="logout" onclick="logout()">Logout</button>
+
+</div>
+
+<div id="alertBox"></div>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
+
