@@ -9,25 +9,36 @@ import java.io.PrintWriter;
 @WebServlet("/getPassword")
 public class GetPasswordServlet extends HttpServlet {
 
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+    @Override
+    protected void doOptions(HttpServletRequest request, HttpServletResponse response) {
+        setCors(response, request);
+    }
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
+
+        setCors(response, request);
 
         PrintWriter out = response.getWriter();
 
         try {
-            HttpSession session = request.getSession(false);
+        	int userId;
 
-            if (session == null || session.getAttribute("userId") == null) {
-                response.setStatus(401);
-                return;
-            }
+        	if (request.getParameter("userId") != null) {
+        	    userId = Integer.parseInt(request.getParameter("userId"));
+        	} else {
+        	    HttpSession session = request.getSession(false);
 
-            int userId = (int) session.getAttribute("userId");
+        	    if (session == null || session.getAttribute("userId") == null) {
+        	        response.setStatus(401);
+        	        return;
+        	    }
+
+        	    userId = (int) session.getAttribute("userId");
+        	}
 
             int id = Integer.parseInt(request.getParameter("id"));
 
@@ -42,11 +53,7 @@ public class GetPasswordServlet extends HttpServlet {
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
-                String encrypted = rs.getString("encrypted_password");
-
-                // 🔐 DECRYPT
-                String decrypted = AESUtil.decrypt(encrypted);
-
+                String decrypted = AESUtil.decrypt(rs.getString("encrypted_password"));
                 out.print(decrypted);
             } else {
                 response.setStatus(404);
@@ -56,5 +63,14 @@ public class GetPasswordServlet extends HttpServlet {
             e.printStackTrace();
             response.setStatus(500);
         }
+    }
+
+    private void setCors(HttpServletResponse response, HttpServletRequest request) {
+        String origin = request.getHeader("Origin");
+
+        response.setHeader("Access-Control-Allow-Origin", origin);
+        response.setHeader("Access-Control-Allow-Credentials", "true");
+        response.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+        response.setHeader("Access-Control-Allow-Headers", "Content-Type");
     }
 }
