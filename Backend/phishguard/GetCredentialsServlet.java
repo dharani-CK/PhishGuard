@@ -11,30 +11,39 @@ public class GetCredentialsServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
 
+    //  Handle preflight
+    @Override
+    protected void doOptions(HttpServletRequest request, HttpServletResponse response) {
+        setCors(response, request);
+    }
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
 
+        setCors(response, request); //  MUST FIRST
         response.setContentType("application/json");
+
         PrintWriter out = response.getWriter();
 
         try {
-            // ===============================
-            // 1️⃣ CHECK SESSION
-            // ===============================
-            HttpSession session = request.getSession(false);
+            //  HYBRID AUTH (SESSION + userId)
+        	int userId;
 
-            if (session == null || session.getAttribute("userId") == null) {
-                System.out.println("❌ Unauthorized access");
-                response.setStatus(401);
-                return;
-            }
+        	if (request.getParameter("userId") != null) {
+        	    userId = Integer.parseInt(request.getParameter("userId"));
+        	} else {
+        	    HttpSession session = request.getSession(false);
 
-            int userId = (int) session.getAttribute("userId");
+        	    if (session == null || session.getAttribute("userId") == null) {
+        	        response.setStatus(401);
+        	        return;
+        	    }
 
-            // ===============================
-            // 2️⃣ CONNECT DATABASE
-            // ===============================
+        	    userId = (int) session.getAttribute("userId");
+        	}
+
+            //  DB
             Connection conn = DBConnection.getConnection();
 
             String sql = "SELECT id, website, site_username, encrypted_password FROM credentials WHERE user_id=?";
@@ -43,41 +52,45 @@ public class GetCredentialsServlet extends HttpServlet {
 
             ResultSet rs = ps.executeQuery();
 
-            // ===============================
-            // 3️⃣ BUILD JSON RESPONSE
-            // ===============================
+            //  Build JSON
             StringBuilder json = new StringBuilder("[");
             boolean first = true;
 
             while (rs.next()) {
 
-                String website = rs.getString("website");
-                String username = rs.getString("site_username");
-
-                // 🔐 DECRYPT PASSWORD
-                String encrypted = rs.getString("encrypted_password");
-                String decrypted = AESUtil.decrypt(encrypted);
+                String decrypted = AESUtil.decrypt(rs.getString("encrypted_password"));
 
                 if (!first) json.append(",");
+
                 json.append("{")
-                    .append("\"id\":").append(rs.getInt("id")).append(",")
-                    .append("\"website\":\"").append(website).append("\",")
-                    .append("\"username\":\"").append(username).append("\",")
-                    .append("\"password\":\"").append(decrypted).append("\"")
-                    .append("}");
+                        .append("\"id\":").append(rs.getInt("id")).append(",")
+                        .append("\"website\":\"").append(rs.getString("website")).append("\",")
+                        .append("\"username\":\"").append(rs.getString("site_username")).append("\",")
+                        .append("\"password\":\"").append(decrypted).append("\"")
+                        .append("}");
 
                 first = false;
             }
 
             json.append("]");
-
             out.print(json.toString());
 
-            System.out.println("✅ Credentials fetched successfully");
+            System.out.println("✅ Credentials sent");
 
         } catch (Exception e) {
             e.printStackTrace();
             response.setStatus(500);
+            out.print("{\"error\":\"Server error\"}");
         }
+    }
+
+    //  CORS
+    private void setCors(HttpServletResponse response, HttpServletRequest request) {
+        String origin = request.getHeader("Origin");
+
+        response.setHeader("Access-Control-Allow-Origin", origin);
+        response.setHeader("Access-Control-Allow-Credentials", "true");
+        response.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+        response.setHeader("Access-Control-Allow-Headers", "Content-Type");
     }
 }
