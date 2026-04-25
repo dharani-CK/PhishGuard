@@ -1,71 +1,164 @@
-<!-- ========================= index.html ========================= -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>PhishGuard</title>
-<link rel="stylesheet" href="styles.css">
+
+<style>
+
+/* 🌌 BACKGROUND */
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+
+    /* 👇 move image to LEFT so login stays clean */
+    background: 
+        linear-gradient(rgba(2,6,23,0.75), rgba(2,6,23,0.85)),
+        url("login.png") no-repeat left center fixed;
+
+    background-size: auto 100%;
+    background-position: center;
+}
+
+/* 🔳 CARD */
+.container {
+    width: 360px;
+    padding: 30px;
+    border-radius: 15px;
+    background: rgba(30, 41, 59, 0.7);
+    backdrop-filter: blur(15px);
+    text-align: center;
+    box-shadow: 0 0 40px rgba(0,0,0,0.5);
+}
+
+/* 🔐 TITLE */
+h1 {
+    margin-bottom: 5px;
+}
+
+/* ✨ TAGLINE */
+.tagline {
+    font-size: 14px;
+    opacity: 0.8;
+    margin-bottom: 25px;
+}
+
+/* 🚀 BUTTON */
+button {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    background: linear-gradient(to right, #3b82f6, #06b6d4);
+    color: white;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+/* 🧾 INPUTS */
+input {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border-radius: 8px;
+    border: none;
+    outline: none;
+    background: #0f172a;
+    color: white;
+}
+
+/* 🔁 SWITCH LINK */
+.switch {
+    margin-top: 10px;
+    cursor: pointer;
+    font-size: 14px;
+    color: #38bdf8;
+}
+
+/* HIDE */
+.hidden {
+    display: none;
+}
+
+</style>
 </head>
+
 <body>
 
 <div class="container">
-<h1>🔐 PhishGuard</h1>
 
-<!-- LOGIN -->
-<div id="loginPage" class="card">
-  <h2>Login</h2>
-  <input id="loginUser" placeholder="Username">
-  <input id="loginPass" type="password" placeholder="Master Password">
-  <button onclick="login()">Login</button>
-  <button class="secondary" onclick="showRegister()">Create Account</button>
-</div>
+    <!-- 🔐 ALWAYS VISIBLE HEADER -->
+    <h1>🔐 PhishGuard</h1>
+    <p class="tagline">
+        Your Intelligent Password Vault & Phishing Protection System
+    </p>
 
-<!-- REGISTER -->
-<div id="registerPage" class="card hidden">
-  <h2>Create Account</h2>
-  <input id="regUser" placeholder="Username">
-  <input id="regPass" type="password" placeholder="Master Password">
-  <button onclick="register()">Register</button>
-  <button class="secondary" onclick="showLogin()">Back to Login</button>
-</div>
+    <!-- 🔥 HOME VIEW -->
+    <div id="homeView">
+        <button onclick="showLogin()">Login</button>
+    </div>
 
-<!-- DASHBOARD -->
-<div id="dashboard" class="hidden">
+    <!-- 🔐 LOGIN VIEW -->
+    <div id="loginView" class="hidden">
+        <h3>Login</h3>
 
-<div class="card">
-  <h2>Add Credential</h2>
-  <input id="url" placeholder="Website URL (https://...)">
-  <input id="siteUser" placeholder="Username">
-  <input id="sitePass" type="password" placeholder="Password">
-  <button onclick="addCredential()">Save</button>
-</div>
+        <form action="login" method="post">
+            <input type="text" name="username" placeholder="Username" required>
+            <input type="password" name="password" placeholder="Master Password" required>
+            <button type="submit">Login</button>
+        </form>
 
-<div class="card">
-  <h2>Search Credentials</h2>
-  <input id="search" placeholder="Search website" onkeyup="renderCredentials()">
-</div>
+        <div class="switch" onclick="showRegister()">
+            Not having an account? Register
+        </div>
+    </div>
 
-<div class="card">
-  <h2>Stored Credentials</h2>
-  <div id="credList"></div>
-</div>
+    <!-- 🆕 REGISTER VIEW -->
+    <div id="registerView" class="hidden">
+        <h3>Register</h3>
 
-<div class="card">
-  <h2>Report Phishing</h2>
-  <input id="phishUrl" placeholder="Suspicious URL">
-  <button onclick="reportPhishing()">Report</button>
-</div>
+        <form action="register" method="post">
+            <input type="text" name="username" placeholder="New Username" required>
+            <input type="password" name="password" placeholder="New Password" required>
+            <button type="submit">Register</button>
+        </form>
 
-<button class="logout" onclick="logout()">Logout</button>
+        <div class="switch" onclick="showLogin()">
+            Already have an account? Login
+        </div>
+    </div>
 
 </div>
 
-<div id="alertBox"></div>
+<script>
 
-</div>
+// ELEMENTS
+const home = document.getElementById("homeView");
+const login = document.getElementById("loginView");
+const register = document.getElementById("registerView");
 
-<script src="script.js"></script>
+// SHOW LOGIN
+function showLogin() {
+    home.classList.add("hidden");
+    login.classList.remove("hidden");
+    register.classList.add("hidden");
+}
+
+// SHOW REGISTER
+function showRegister() {
+    home.classList.add("hidden");
+    login.classList.add("hidden");
+    register.classList.remove("hidden");
+}
+
+</script>
+
 </body>
 </html>
-
