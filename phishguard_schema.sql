@@ -49,3 +49,7 @@ CREATE TABLE login_logs (
 
     FOREIGN KEY (user_id) REFERENCES users(user_id)
 );
+CREATE TABLE trusted_domains (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    domain VARCHAR(255) UNIQUE
+);
